@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 import random
 import numpy as np
 
@@ -81,6 +82,9 @@ def nearestNeigborOrderRand(points=None,distanceMatrix=None):
         w = 1.0/ (actualDistance + 1.e-12)
         # Setting the visited infinity nodes weights to 0
         w[np.isinf(w)] = 0.0
+        # Softening the weights to increase the exploration of the algorithm to reduce crossovers
+        # Keep it between (0.6 for more exploration 0.8 for more greediness)
+        w = w ** 0.7
         # Calculating the total weight
         totalWeight = w.sum()
 
@@ -100,10 +104,47 @@ def nearestNeigborOrderRand(points=None,distanceMatrix=None):
     return order
 
 def nearestNeigborOrder(points=None, distanceMatrix=None):
+    
+    # Checking if one input is atleast given which is points or the distanceMatrix 
+    if (points is None) == (distanceMatrix is None):
+        raise ValueError("Provide exactly one of points= or distanceMatrix=.")
+    
+    # Computes the distance between points if we dont have one
+    if distanceMatrix is None:
+        distanceMatrix = buildDistanceMatrix(points)
+    else:
+        distanceMatrix = np.asarray(distanceMatrix, dtype=float)
 
-# FIX ME
+    # Getting the total number of points we have from the file
+    totalRows = distanceMatrix.shape[0]
+    # Initalizing arrays to track the order of points and visited nodes
+    order = np.empty(totalRows, dtype=int)
+    visited = np.zeros(totalRows, dtype=bool)
 
-    return []
+    # Setting a variable that allows the algorithm to find the next start index for the node that we 
+    # computed or if not it defaults back to the start node if nothing was made
+    start_offset = getattr(nearestNeigborOrder, "_start_offset", 0)
+    cur = int(start_offset) % totalRows
+    order[0] = cur
+    visited[cur] = True
+
+    # Iterating over all the nodes
+    for i in range(1, totalRows):
+        # Finding the distance from current point to rest of the point and if 
+        # visited then we set it to infinity to ignore it
+        drow = np.where(visited, np.inf, distanceMatrix[cur])
+
+        # Pick the closest unvisited node
+        nxt = int(np.argmin(drow))
+
+        order[i] = nxt
+        visited[nxt] = True
+        cur = nxt
+
+    # To find the new offset and use it as the new starting node.
+    nearestNeigborOrder._start_offset = (start_offset + 1) % totalRows
+
+    return order
 
 def solveTSPNN(points):
     # Convert input points to a NumPy float array for consistency
