@@ -25,7 +25,7 @@ def kNearestCluster(points, k):
 
         #compare newPads with the dronePads to see if they are the same
 
-        if np.array_equal(dronePads, newPads):
+        if np.allclose(dronePads, newPads):
             break
 
         #if the two are not equal yet, then replace dronePads with newPads
