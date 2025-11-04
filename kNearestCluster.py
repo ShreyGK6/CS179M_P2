@@ -15,7 +15,7 @@ def kNearestCluster(points, k):
         newPads = []
         for i in range(k):
             clusteredPoints = pointsArray[i == dronePadLabels]
-            if len(clusteredPoints > 0):       # a time when we find the means of the points
+            if len(clusteredPoints > 0):       #calculate the mean of the cluster points
                 meanDronePads = clusteredPoints.mean(axis = 0)
             else:
                 meanDronePads = dronePads[i]
