@@ -9,7 +9,7 @@ def kNearestCluster(points, k):
     dronePads = np.asarray(dronePads, dtype = float)
 
     #to make sure that we reach the end, it will iterate 100 times
-    for iteration in range(100):
+    for _ in range(100):
         distance = np.linalg.norm(pointsArray[:,None,:] - dronePads[None,:,:], axis = 2)  #calculate distance and create labels
         dronePadLabels = np.argmin(distance, axis = 1)
         newPads = []
