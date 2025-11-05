@@ -11,16 +11,15 @@ def kNearestCluster(points, k):
     #to make sure that we reach the end, it will iterate 100 times
     for _ in range(100):
         distance = np.linalg.norm(pointsArray[:,None,:] - dronePads[None,:,:], axis = 2)  #calculate distance and create labels
-        dronePadLabels = np.argmin(distance, axis = 0)
+        dronePadLabels = np.argmin(distance, axis = 1)
         newPads = []
         for i in range(k):
             clusteredPoints = pointsArray[i == dronePadLabels]
-            if len(clusteredPoints > 0):       #calculate the mean of the cluster points
+            if len(clusteredPoints) > 0:       #calculate the mean of the cluster points
                 meanDronePads = clusteredPoints.mean(axis = 0)
             else:
                 meanDronePads = dronePads[i]
-        
-        newPads.append(meanDronePads)
+            newPads.append(meanDronePads)
         newPads = np.asarray(newPads, dtype = float)
 
         #compare newPads with the dronePads to see if they are the same
