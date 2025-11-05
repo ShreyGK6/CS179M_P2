@@ -9,7 +9,7 @@ def kNearestCluster(points, k):
     dronePads = np.asarray(dronePads, dtype = float)
 
     #to make sure that we reach the end, it will iterate 100 times
-    for _ in range(100):
+    for iteration in range(100):
         distance = np.linalg.norm(pointsArray[:,None,:] - dronePads[None,:,:], axis = 2)  #calculate distance and create labels
         dronePadLabels = np.argmin(distance, axis = 1)
         newPads = []
@@ -37,9 +37,10 @@ def createDronePaths(points , k):
     dronePadLabels, dronePads = kNearestCluster(points, k)
     totalDistance = 0
     completeRoute = []
+    pointsArray = np.asarray(points, dtype = float)
 
     for i in range(k):
-        cluster = points[i == dronePadLabels]
+        cluster = pointsArray[i == dronePadLabels]
         route = solveTSPNN(cluster)                                #use code from P1    
         currentDistance = tourLengthFromPoints(route)
         totalDistance = totalDistance + currentDistance
