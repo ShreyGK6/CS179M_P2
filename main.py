@@ -3,6 +3,8 @@ import numpy as np
 from inputValidator import validate_input_file
 from kNearestCluster import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
+from waitUntil7am import check_if_7am
+
 
 #this will write the solutions to files
 def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder):
@@ -24,8 +26,10 @@ def write_solution_file(points, base_filename, completeRoute, drone_count, outpu
         print(f" -> Wrote{file_path}")
 
 def main():
+    check_if_7am()
+
     print("=== Compute Possible Solutions ===")
-    filename = input("Enter the name of file: ").strip()
+    filename = input("\nEnter the name of file: ").strip()
     input_folder = "TextFiles"
     output_folder = "OutputRoutesFolder"
     os.makedirs(output_folder, exist_ok = True)
@@ -65,7 +69,7 @@ def main():
             #program should exit on its own
             return
         try:
-            choice = int(input("Please select your choice 1 to 4:").strip())
+            choice = int(input("Please select your choice 1 to 4: ").strip())
         except ValueError:
             continue
         stop_decision_timer()
