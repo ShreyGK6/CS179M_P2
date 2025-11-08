@@ -56,7 +56,7 @@ def main():
             size = route_info["Size of Cluster"]
             dist = route_info["Distance"]
             print(f"    Landing Pad {i} should be at [{pad[0]:.0f}, {pad[1]:.0f}], " f"serving {size} locations, route is {dist:.1f} meters")
-        print(f"    Objective Function Score: {OFScore:.2f}\n")
+        #print(f"    Objective Function Score: {OFScore:.2f}\n")    #commented out OFScore so that only necessary info is shown
 
     print("You have 5 minutes to make your decision.\n")
     start_decision_timer(300)
