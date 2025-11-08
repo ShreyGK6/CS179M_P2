@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from inputValidator import validate_input_file
-from kNearestCluster import createDronePaths
+from kMeansCluster import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 from waitUntil7am import check_if_7am
 
@@ -78,7 +78,7 @@ def main():
     print("\nWriting solution files to disk...")
     write_solution_file(points, base_filename, completeRoute, choice, output_folder)
 
-    #goku add the vizualization part here
+    #gokul add the vizualization part here
 
     print("\n Summary:")
     print(f" -Drones used: {choice}")
