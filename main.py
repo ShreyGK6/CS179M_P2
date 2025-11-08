@@ -2,6 +2,7 @@ import os
 import numpy as np
 from inputValidator import validate_input_file
 from kNearestCluster import createDronePaths
+from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 
 #this will write the solutions to files
 def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder):
@@ -54,13 +55,21 @@ def main():
             dist = route_info["Distance"]
             print(f"    Landing Pad {i} should be at [{pad[0]:.0f}, {pad[1]:.0f}], " f"serving {size} locations, route is {dist:.1f} meters")
         print()
-        
+
+    print("You have 5 minutes to make your decision.\n")
+    start_decision_timer(300)
     choice = None
+
     while choice not in [1, 2, 3, 4]:
+        if timeout_ocurred:
+            #program should exit on its own
+            return
         try:
             choice = int(input("Please select your choice 1 to 4:").strip())
         except ValueError:
             continue
+        stop_decision_timer()
+   
 
     totalDistance, completeRoute = all_results[choice]
     base_filename = os.path.splitext(filename)[0]
