@@ -5,7 +5,6 @@ from kNearestCluster import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 from waitUntil7am import check_if_7am
 
-
 #this will write the solutions to files
 def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder):
     os.makedirs(output_folder, exist_ok = True)
@@ -41,16 +40,15 @@ def main():
     except (FileNotFoundError, ValueError) as e:
         print(e)
         return
-    
+   
     node_count = len(points)
     print(f"\nThere are {node_count} nodes: Solutions will be available shortly...\n")
-
 
     all_results = {}
 
     for k in range(1,5):
-        totalDistance, completeRoute = createDronePaths(points, k)
-        all_results[k] = (totalDistance, completeRoute)
+        totalDistance, completeRoute, OFScore = createDronePaths(points, k)
+        all_results[k] = (totalDistance, completeRoute, OFScore)
 
         print(f"{k}) If you use {k} drones(s), the total route will be {totalDistance:.1f} meters")
         for i, route_info in enumerate(completeRoute, start = 1):
@@ -58,7 +56,7 @@ def main():
             size = route_info["Size of Cluster"]
             dist = route_info["Distance"]
             print(f"    Landing Pad {i} should be at [{pad[0]:.0f}, {pad[1]:.0f}], " f"serving {size} locations, route is {dist:.1f} meters")
-        print()
+        print(f"    Objective Function Score: {OFScore:.2f}\n")
 
     print("You have 5 minutes to make your decision.\n")
     start_decision_timer(300)
@@ -74,8 +72,7 @@ def main():
             continue
         stop_decision_timer()
    
-
-    totalDistance, completeRoute = all_results[choice]
+    totalDistance, completeRoute, _ = all_results[choice]
     base_filename = os.path.splitext(filename)[0]
 
     print("\nWriting solution files to disk...")
@@ -91,4 +88,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

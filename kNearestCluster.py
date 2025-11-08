@@ -2,7 +2,7 @@ import numpy as np
 from projectOneFunctions import solveTSPNN, tourLengthFromPoints
 
 def kNearestCluster(points, k):
-    np.random.seed(42)                                 #seed for kmeans algorithm
+    np.random.seed(100)                                 #seed for kmeans algorithm
     pointsArray = np.asarray(points, dtype = float)
     dronePadIndex = np.random.choice(len(pointsArray), k, replace = False)
     dronePads = pointsArray[dronePadIndex]
@@ -23,7 +23,6 @@ def kNearestCluster(points, k):
         newPads = np.asarray(newPads, dtype = float)
 
         #compare newPads with the dronePads to see if they are the same
-
         if np.allclose(dronePads, newPads):
             break
 
@@ -47,4 +46,7 @@ def createDronePaths(points , k):
         completeRoute.append({"DronePad": dronePads[i], "Size of Cluster": len(cluster),
                               "Distance": currentDistance, "Route": route})
         
-    return totalDistance, completeRoute
+    
+    OFScore = np.sum((pointsArray - dronePads[dronePadLabels])**2)
+        
+    return totalDistance, completeRoute, OFScore
