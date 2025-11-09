@@ -20,8 +20,6 @@ def validate_input_file(file_path):
     num_points = points.shape[0]
 
     #check the range
-    if num_points < 1:
-        raise ValueError("[ERROR] Input must contain at least 1 location")
     if num_points > 4096:
         raise ValueError("[ERROR] Input exceeds 4096 locations (max allowed).")
     
