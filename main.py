@@ -4,6 +4,7 @@ from inputValidator import validate_input_file
 from kMeansCluster import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 from waitUntil7am import check_if_7am
+from dataVis import visTimeDroneTradeOff, visAllDronePaths
 
 #this will write the solutions to files
 def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder):
@@ -25,7 +26,7 @@ def write_solution_file(points, base_filename, completeRoute, drone_count, outpu
         print(f" -> Wrote{file_path}")
 
 def main():
-    check_if_7am()
+    # check_if_7am()
 
     print("=== Compute Possible Solutions ===")
     filename = input("\nEnter the name of file: ").strip()
@@ -79,6 +80,9 @@ def main():
     write_solution_file(points, base_filename, completeRoute, choice, output_folder)
 
     #gokul add the vizualization part here
+    visTimeDroneTradeOff(all_results)
+    print(f"ARRAY PRINTED: {all_results}")
+    print(f"Shape of the array {all_results.shape}")
 
     print("\n Summary:")
     print(f" -Drones used: {choice}")
