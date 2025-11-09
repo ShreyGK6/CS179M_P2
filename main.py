@@ -26,7 +26,7 @@ def write_solution_file(points, base_filename, completeRoute, drone_count, outpu
         print(f" -> Wrote{file_path}")
 
 def main():
-    # check_if_7am()
+    check_if_7am()
 
     print("=== Compute Possible Solutions ===")
     filename = input("\nEnter the name of file: ").strip()
@@ -80,9 +80,6 @@ def main():
     write_solution_file(points, base_filename, completeRoute, choice, output_folder)
 
     #gokul add the vizualization part here
-    visTimeDroneTradeOff(all_results)
-    print(f"ARRAY PRINTED: {all_results}")
-    print(f"Shape of the array {all_results.shape}")
 
     print("\n Summary:")
     print(f" -Drones used: {choice}")
