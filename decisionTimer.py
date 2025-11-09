@@ -15,7 +15,7 @@ def timeout_handler(duration_sec = 300):
         remaining = duration_sec - elapsed
         if remaining in checkpoints:
             minutes_left = remaining //60
-            print(f"\n {minutes_left} minute{'s' if minutes_left > 1 else ''}left to decide.")
+            print(f"\n {minutes_left} minute{'s' if minutes_left > 1 else ''} left to decide.")
     timeout_ocurred = True
     print("\n[ERROR] Decision time expired (5 minutes). Program terminated.\n")
     os._exit(1)

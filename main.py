@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 from inputValidator import validate_input_file
 from kMeansCluster import createDronePaths
@@ -7,7 +8,7 @@ from waitUntil7am import check_if_7am
 from dataVis import visTimeDroneTradeOff, visAllDronePaths
 
 #this will write the solutions to files
-def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder):
+def write_solution_file(points, base_filename, completeRoute, drone_count, output_folder, print_to_console = True):
     os.makedirs(output_folder, exist_ok = True)
 
     for i,route_info in enumerate(completeRoute, start=1):
@@ -23,7 +24,9 @@ def write_solution_file(points, base_filename, completeRoute, drone_count, outpu
         file_path = os.path.join(output_folder, filename)
         with open(file_path, 'w') as f:
             f.write("\n".join(route_indices))
-        print(f" -> Wrote{file_path}")
+        
+        if print_to_console:
+            print(f" -> Wrote{file_path}")
 
 def main():
     check_if_7am()
@@ -31,9 +34,13 @@ def main():
     print("=== Compute Possible Solutions ===")
     filename = input("\nEnter the name of file: ").strip()
     input_folder = "TextFiles"
-    output_folder = "OutputRoutesFolder"
-    os.makedirs(output_folder, exist_ok = True)
+    testing_folder = "OutputRoutesFolder"
+    os.makedirs(testing_folder, exist_ok = True)
     file_path = os.path.join(input_folder, filename)
+
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+    output_folder = os.path.join(desktop_path,"OutputRoutesFolder")
+    os.makedirs(output_folder,exist_ok=True)
 
     #validates the inputs
     try:
@@ -60,6 +67,7 @@ def main():
         #print(f"    Objective Function Score: {OFScore:.2f}\n")    #commented out OFScore so that only necessary info is shown
 
     print("You have 5 minutes to make your decision.\n")
+    sys.stdout.flush()
     start_decision_timer(300)
     choice = None
 
@@ -73,11 +81,14 @@ def main():
             continue
         stop_decision_timer()
    
-    totalDistance, completeRoute, _ = all_results[choice]
+    sys.stdout.flush()
+
+    totalDistance, completeRoute = all_results[choice]
     base_filename = os.path.splitext(filename)[0]
 
     print("\nWriting solution files to disk...")
-    write_solution_file(points, base_filename, completeRoute, choice, output_folder)
+    write_solution_file(points, base_filename, completeRoute, choice, testing_folder, print_to_console = False)
+    write_solution_file(points, base_filename, completeRoute, choice, output_folder, print_to_console = True)
 
     #gokul add the vizualization part here
 
