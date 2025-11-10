@@ -3,9 +3,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import seaborn.objects as so
-import matplotlib.pyplot as plt
 
-def visAllDronePaths(points, completeRoute):
+def visAllDronePaths(points, completeRoute,base_filename):
 
     minSidePix = 1920
     dpi = 200
@@ -69,20 +68,23 @@ def visAllDronePaths(points, completeRoute):
     )
 
     movePlotToDesktop(p,"Andersons_OVERALL_SOLUTION",slideIn,dpi=dpi)
-    print("[SUCCESS] Visualization saved to Desktop/visualizationRouteFolder")
 
     return None
 
-def visTimeDroneTradeOff(all_results):
+
+def visTimeDroneTradeOff(all_results,base_filename):
+    # For initalizing moveToDesktop()
+    minSidePix = 1920
+    dpi = 200
+    slideIn = float(minSidePix) / float(dpi)
+
     setupMinPerDrone = 2.0
     metersPerMin = 100.0
     sns.set_theme(style="whitegrid")
 
     ks = sorted(all_results)
-    # Slowest Drone time stored at k stored
     slowestTimes = []
     for k in ks:
-        # Getting the list of dicts with "Distance" of all drones at each iteration
         completeRoute = all_results[k][1]
         distances = [ri.get("Distance", ri.get("distance")) for ri in completeRoute]
         slowestDistance = float(max(distances))
@@ -93,7 +95,7 @@ def visTimeDroneTradeOff(all_results):
 
     bestIdx = int(np.argmin(totalWithSetup))
     bestK = ks[bestIdx]
-    bestY = totalWithSetup[bestIdx]
+    bestY = float(totalWithSetup[bestIdx])
 
     df = pd.DataFrame({
         "DronesUsed": ks,
@@ -109,23 +111,26 @@ def visTimeDroneTradeOff(all_results):
         value_name="Minutes"
     )
 
-    linePlot = sns.lineplot(
-        data=dfMelted,
-        x="DronesUsed",
-        y="Minutes",
-        hue="Category",
-        marker="o"
+    # Sepearate df for best point aka best number of drones to choose for the task
+    bestDf = pd.DataFrame({"DronesUsed": [bestK], "Minutes": [bestY]})
+
+    p = (
+        so.Plot(dfMelted, x="DronesUsed", y="Minutes", color="Category")
+        .add(so.Line())
+        # markers on the lines
+        .add(so.Dot(pointsize=6))
+        # highlight best point
+        .add(so.Dot(pointsize=10, color="black"), data=bestDf, x="DronesUsed", y="Minutes")
+        .label(
+            x="Number of Drones Used",
+            y="Minutes",
+            title="Drone Count vs Slowest Drone Time + Setup Time Tradeoff"
+        )
+        .theme({"figure.facecolor": "white", "axes.facecolor": "white"})
     )
 
-    sns.scatterplot(x=[bestK], y=[bestY], color="black", s=80, zorder=5)
-    linePlot.text(bestK + 0.1, bestY, f"Best tradeoff: {bestK} drones", fontsize=10)
-
-    linePlot.set_xticks(ks)
-    linePlot.set_xlabel("Number of Drones Used")
-    linePlot.set_ylabel("Minutes")
-    linePlot.set_title("Drone Count vs Slowest Drone Time + Setup Time Tradeoff")
-
-    plt.show()
+    # Save to visualizationRouteFolder
+    movePlotToDesktop(p, "Andersons_TIME_TRADEOFF", slideIn, dpi=dpi)
     return None
 
 def movePlotToDesktop(plotObj,filename,slideIn,dpi):
