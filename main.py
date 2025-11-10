@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from inputValidator import validate_input_file
-from kNearestCluster import createDronePaths
+from createRoutes import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 from waitUntil7am import check_if_7am
 
