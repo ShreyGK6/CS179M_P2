@@ -75,37 +75,44 @@ def visAllDronePaths(points, completeRoute):
 
 def visTimeDroneTradeOff(all_results):
     setupMinPerDrone = 2.0
+    metersPerMin = 100.0
     sns.set_theme(style="whitegrid")
 
     ks = sorted(all_results)
-    totalDistance = np.array([all_results[k][0] for k in ks], dtype=float)
+    # Slowest Drone time stored at k stored
+    slowestTimes = []
+    for k in ks:
+        # Getting the list of dicts with "Distance" of all drones at each iteration
+        completeRoute = all_results[k][1]
+        distances = [ri.get("Distance", ri.get("distance")) for ri in completeRoute]
+        slowestDistance = float(max(distances))
+        slowestTimes.append(slowestDistance / metersPerMin)
+
     setupTime = np.array(ks, dtype=float) * setupMinPerDrone
-    totalWithSetup = totalDistance + setupTime
+    totalWithSetup = np.array(slowestTimes, dtype=float) + setupTime
 
     bestIdx = int(np.argmin(totalWithSetup))
     bestK = ks[bestIdx]
     bestY = totalWithSetup[bestIdx]
 
-    # Prepare dataframe for seaborn
     df = pd.DataFrame({
         "DronesUsed": ks,
-        "TotalDistance": totalDistance,
-        "SetupTime": setupTime,
-        "TotalWithSetup": totalWithSetup
+        "SlowestDroneTime": slowestTimes,   # BLUE
+        "SetupTime": setupTime,             # ORANGE
+        "TotalWithSetup": totalWithSetup    # GREEN
     })
 
     dfMelted = df.melt(
         id_vars="DronesUsed",
-        value_vars=["TotalDistance", "SetupTime", "TotalWithSetup"],
+        value_vars=["SlowestDroneTime", "SetupTime", "TotalWithSetup"],
         var_name="Category",
-        value_name="Value"
+        value_name="Minutes"
     )
 
-    # Seaborn visualization
     linePlot = sns.lineplot(
         data=dfMelted,
         x="DronesUsed",
-        y="Value",
+        y="Minutes",
         hue="Category",
         marker="o"
     )
@@ -115,8 +122,8 @@ def visTimeDroneTradeOff(all_results):
 
     linePlot.set_xticks(ks)
     linePlot.set_xlabel("Number of Drones Used")
-    linePlot.set_ylabel("Meters + Setup Time (2 min/drone)")
-    linePlot.set_title("Drone Count vs Total Distance + Setup Time Tradeoff")
+    linePlot.set_ylabel("Minutes")
+    linePlot.set_title("Drone Count vs Slowest Drone Time + Setup Time Tradeoff")
 
     plt.show()
     return None
