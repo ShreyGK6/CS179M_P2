@@ -66,8 +66,8 @@ def visAllDronePaths(points, completeRoute,base_filename):
                title=f"Overall Solution (K = {len(completeRoute)})")
         .theme({"figure.facecolor": "white","axes.facecolor": "white"})
     )
-
-    movePlotToDesktop(p,"Andersons_OVERALL_SOLUTION",slideIn,dpi=dpi)
+    name = base_filename + "_OVERALL_SOLUTION"
+    movePlotToDesktop(p,name,slideIn,dpi=dpi)
 
     return None
 
@@ -130,7 +130,8 @@ def visTimeDroneTradeOff(all_results,base_filename):
     )
 
     # Save to visualizationRouteFolder
-    movePlotToDesktop(p, "Andersons_TIME_TRADEOFF", slideIn, dpi=dpi)
+    name = base_filename + "_TIME_TRADEOFF"
+    movePlotToDesktop(p, name, slideIn, dpi=dpi)
     return None
 
 def movePlotToDesktop(plotObj,filename,slideIn,dpi):
