@@ -91,7 +91,7 @@ def main():
     write_solution_file(points, base_filename, completeRoute, choice, output_folder, print_to_console = True)
 
     #gokul add the vizualization part here
-    visAllDronePaths(points, completeRoute,choice)
+    visAllDronePaths(points, completeRoute)
     
     print("\n Summary:")
     print(f" -Drones used: {choice}")

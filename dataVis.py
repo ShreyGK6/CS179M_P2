@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 import seaborn.objects as so
 
-def visAllDronePaths(points, completeRoute,choice):
+def visAllDronePaths(points, completeRoute):
 
     minSidePix = 1920
     dpi = 200
@@ -55,19 +55,20 @@ def visAllDronePaths(points, completeRoute,choice):
         .add(so.Path(linewidth=2.5),
              data=routesDf, x="x", y="y", color="routeId")
         # landing pads "stroke" (bigger black dot)
-        .add(so.Dot(pointsize=10, color="black"),
+        .add(so.Dot(pointsize=7, color="black"),
              data=padsDf, x="x", y="y")
         # landing pads foreground (colored dot)
-        .add(so.Dot(pointsize=2),
+        .add(so.Dot(pointsize=4),
              data=padsDf, x="x", y="y", color="routeId")
         .scale(color=palette)
         .limit(x=xLim, y=yLim)  # keeps axes equal since limits share same span
         .label(x="X (meters)", y="Y (meters)",
                title=f"Overall Solution (K = {len(completeRoute)})")
-        .theme({"figure.facecolor": "white"})
+        .theme({"figure.facecolor": "white","axes.facecolor": "white"})
     )
-
-    p.show()
+    
+    movePlotToDesktop(p,"Andersons_OVERALL_SOLUTION",slideIn,dpi=dpi)
+    print("[SUCCESS] Visualization saved to Desktop/visualizationRouteFolder")
 
     return None
 
@@ -78,8 +79,9 @@ def visTimeDroneTradeOff(all_results):
 
 def movePlotToDesktop(plotObj,filename,slideIn,dpi):
     desktopPath = os.path.join(os.path.expanduser("~"), "Desktop")
+    folderPath = os.path.join(desktopPath, "visualizationRouteFolder")
     os.makedirs(desktopPath, exist_ok=True)
-    outPath = os.path.join(desktopPath, filename)
+    outPath = os.path.join(folderPath, filename)
 
     plotObj.save(outPath, width=slideIn,height=slideIn,dpi=dpi)
     return None
