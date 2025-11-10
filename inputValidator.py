@@ -1,7 +1,6 @@
 import os
 import numpy as np
 
-
 #validator function
 def validate_input_file(file_path):
     #this checks if the file exists
