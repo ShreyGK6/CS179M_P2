@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-def generateCirclePoints(x_center, y_center, radius, num_points):
-    angles = np.random.rand(num_points) * 2 * np.pi
-    x = radius * np.cos(angles) + x_center
-    y = radius * np.sin(angles) + y_center
+def generateCirclePoints(xCenter, yCenter, radius, numPoints):
+    angles = np.random.rand(numPoints) * 2 * np.pi
+    x = radius * np.cos(angles) + xCenter
+    y = radius * np.sin(angles) + yCenter
     return x, y
 
 x1, y1 = generateCirclePoints(10, 5, 10, 64)   
