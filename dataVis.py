@@ -63,7 +63,7 @@ def visAllDronePaths(points, completeRoute,base_filename):
         .scale(color=palette)
         .limit(x=xLim, y=yLim)  # keeps axes equal since limits share same span
         .label(x="X (meters)", y="Y (meters)",
-               title=f"Overall Solution (K = {len(completeRoute)})")
+               title=f"{base_filename} Overall Solution (K = {len(completeRoute)})")
         .theme({"figure.facecolor": "white","axes.facecolor": "white"})
     )
     name = base_filename + "_OVERALL_SOLUTION"
@@ -114,6 +114,12 @@ def visTimeDroneTradeOff(all_results,base_filename):
     # Sepearate df for best point aka best number of drones to choose for the task
     bestDf = pd.DataFrame({"DronesUsed": [bestK], "Minutes": [bestY]})
 
+    labelDf = pd.DataFrame({
+        "DronesUsed": [bestK + 0.12],
+        "Minutes":    [bestY + 0.6],
+        "label":      ["Best TradeOff"]
+    })
+
     p = (
         so.Plot(dfMelted, x="DronesUsed", y="Minutes", color="Category")
         .add(so.Line())
@@ -121,10 +127,11 @@ def visTimeDroneTradeOff(all_results,base_filename):
         .add(so.Dot(pointsize=6))
         # highlight best point
         .add(so.Dot(pointsize=10, color="black"), data=bestDf, x="DronesUsed", y="Minutes")
+        .add(so.Text(color="black"), data=labelDf, x="DronesUsed", y="Minutes", text="label")
         .label(
             x="Number of Drones Used",
             y="Minutes",
-            title="Drone Count vs Slowest Drone Time + Setup Time Tradeoff"
+            title= base_filename + " Time Tradeoff"
         )
         .theme({"figure.facecolor": "white", "axes.facecolor": "white"})
     )
