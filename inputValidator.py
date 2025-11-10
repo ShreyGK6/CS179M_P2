@@ -1,7 +1,6 @@
 import os
 import numpy as np
 
-
 #validator function
 def validate_input_file(file_path):
     #this checks if the file exists
@@ -24,9 +23,6 @@ def validate_input_file(file_path):
         raise ValueError("[ERROR] Input must contain at least 1 location")
     if num_points > 4096:
         raise ValueError("[ERROR] Input exceeds 4096 locations (max allowed).")
-    
-    if np.any(points < 0):
-        raise ValueError("[ERROR] Negative coordinates are not allowed.")
     
     print(f"[SUCCESS] Loaded {num_points} locations successfully.")
     return points

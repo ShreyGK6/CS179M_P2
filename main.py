@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from inputValidator import validate_input_file
-from kMeansCluster import createDronePaths
+from kNearestCluster import createDronePaths
 from decisionTimer import start_decision_timer, stop_decision_timer, timeout_ocurred
 from waitUntil7am import check_if_7am
 
@@ -56,7 +56,7 @@ def main():
             size = route_info["Size of Cluster"]
             dist = route_info["Distance"]
             print(f"    Landing Pad {i} should be at [{pad[0]:.0f}, {pad[1]:.0f}], " f"serving {size} locations, route is {dist:.1f} meters")
-        #print(f"    Objective Function Score: {OFScore:.2f}\n")    #commented out OFScore so that only necessary info is shown
+        print(f"    Objective Function Score: {OFScore:.2f}\n")    #commented out OFScore so that only necessary info is shown
 
     print("You have 5 minutes to make your decision.\n")
     start_decision_timer(300)
